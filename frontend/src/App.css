@@ -39,3 +39,93 @@
   cursor: pointer;
   width: 100%;
 }
+
+.login button:hover {
+  opacity: 0.8;
+}
+
+.login .container {
+  padding: 16px;
+}
+
+.messages {
+  margin: 0 auto;
+  width: 50%;
+  padding: 10px;
+  padding-top: 20px;
+  border: 1px solid rgb(90, 86, 86);
+}
+
+.messages ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.messages li {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.messages li:last-child {
+  border-bottom: none;
+}
+
+.button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.button:hover {
+  opacity: 0.8;
+}
+
+.chat {
+  margin: 0 auto;
+  width: 80%;
+  padding: 10px;
+  padding-top: 20px;
+  border: 1px solid rgb(182, 8, 8);
+}
+
+.chat input {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.chat button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.chat button:hover {
+  opacity: 0.8;
+}
+
+.messages .username {
+  font-weight: bold;
+}
+
+.messages .message {
+  color: #333;
+  text-align: center;
+}
+
+.messages .time {
+  font-size: 0.8em;
+  color: #999;
+  text-align: right;
+}

@@ -8,14 +8,17 @@ function Chat () {
         socket.on( 'connect', () => {
             console.log( 'connected' );
             socket.emit('join', {roomId: parseInt(localStorage.getItem('roomId'))});
+            socket.emit('getMessages', {roomId: parseInt(localStorage.getItem('roomId'))});
+            socket.on('messages', (data) => {
+                setMessages(data);
+            });
         } );
         socket.on( 'disconnect', () => {
             console.log( 'disconnected' );
         } );
     }, [] );
     socket.on( 'message', ( data ) => {
-        console.log( data.message );
-        setMessages( messages => [...messages, data.message] );
+        setMessages(messages => [...messages, data] );
     } );
 
     const logout = ( e ) => {
@@ -39,18 +42,33 @@ function Chat () {
                 <label> Message </label>
                 <input type="text" id="message" />
                 <br />
-                <button type="submit"> Send </button>
+                <button type="submit" className="button"> Send </button>
             </form>
             <div className="messages">
                 <ul id="messages">
-                    {messages && messages.map((message, index) => {
-                        return (
-                            <li key={index}> {message.username}: {message.message} </li>
+                    {messages.sort((a, b) => b.id - a.id).map((message, index) => (
+                        <li key={index}>
+                            <div className="username">
+                                {message.User.username}
+                            </div>
+                            <div className="message">
+                                {message.message}
+                            </div>
+                            <span className="time">
+                                {message.createdAt.slice(11, 16)}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+                    {/* {messages && messages.map((message, index) => {
+                       return (
+                            <li key={index}> {message.User.username}: {message.message} </li>
                         );
                     })}
                 </ul>
-            </div>
-            <button onClick={( e ) => logout( e )}> Logout </button>
+            </div>  */}
+            <button onClick={( e ) => logout( e )} className="button"> Logout </button>
         </div>
     );
 }

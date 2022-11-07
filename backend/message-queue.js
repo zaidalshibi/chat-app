@@ -1,16 +1,28 @@
 'use strict';
 
+
 const { Room, Message, User } = require( "./models" );
+
+const getMessages = async( socket, io, roomId ) => {
+    try {
+        const messages = await Message.findAll( {
+            where: {
+                roomId
+            },
+            include: [ User ]
+        } );
+        socket.emit( "messages", messages );
+    } catch ( error ) {
+        console.log( error );
+    }
+};
+
 
 const joinRoom = async( socket, io, roomId ) => {
     console.log( `user ${socket.id} joined room ${roomId}` );
     await Room.findByPk( roomId ).then( room => {
         if ( room ) {
     socket.join( roomId );
-    io.to( roomId ).emit( 'message', {
-        message: `${socket.id} has joined the room`,
-        roomId: roomId
-    } );
         } else {
             console.log( `room ${roomId} does not exist` );
             Room.create( { id: roomId } ).then( room => {
@@ -34,13 +46,16 @@ const leaveRoom = ( socket, io, roomId ) => {
 
 const sendMessage = async( socket, io, payload ) => {
     console.log( `user ${socket.id} sent message ${payload.message}` );
-    const username = User.findByPk( payload.userId )
+    const username = await User.findOne( {where : { id: payload.userId }} );
     await Message.create( { message: payload.message, roomId: payload.roomId, userId: payload.userId } )
         .then( message => {
             io.to( payload.roomId ).emit( 'message', {
-                message: message,
+                message: message.message,
                 roomId: payload.roomId,
-                username: username
+                User: {
+                    username: username.username,
+                    userId: payload.userId
+                }
             } );
         } );
 }
@@ -48,5 +63,6 @@ const sendMessage = async( socket, io, payload ) => {
 module.exports = {
     joinRoom: joinRoom,
     leaveRoom: leaveRoom,
-    sendMessage: sendMessage
+    sendMessage: sendMessage,
+    getMessages: getMessages
 }

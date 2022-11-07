@@ -11,12 +11,12 @@ app.use( userRoutes );
 // socket.io
 const http = require( 'http' );
 const socket = require( 'socket.io' );
-const { joinRoom, leaveRoom, sendMessage } = require( './message-queue' );
+const { joinRoom, leaveRoom, sendMessage, getMessages } = require( './message-queue' );
 const server = http.createServer( app );
 const io = socket( server, {
     transports: [ 'websocket', 'polling' ],
     cors: {
-        origin: 'http://localhost:3001',
+        origin: '*',
         methods: [ 'GET', 'POST', 'PUT' ]
     }
 } );
@@ -35,6 +35,10 @@ io.on( 'connection', socket => {
     socket.on( 'message', payload => {
         sendMessage( socket, io, payload );
     } );
+    socket.on( 'getMessages', payload => {
+        getMessages( socket, io, payload.roomId );
+        io.to( payload.roomId ).emit( 'getMessages' );
+    });
 } );
 // end of socket.io
 
